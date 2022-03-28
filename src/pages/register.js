@@ -3,6 +3,7 @@ import Link from "next/link";
 import { useState } from "react";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../../firebase";
+
 const Register = () => {
   const [credentials, setCredentials] = useState({
     email: "",

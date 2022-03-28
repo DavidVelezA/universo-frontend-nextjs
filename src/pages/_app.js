@@ -1,14 +1,7 @@
-import '../styles/globals.css'
-import { ContextAuthProvider } from "../context/AuthContext";
-import Layout from '../pages/layout'
+import "../styles/globals.css";
 
 function MyApp({ Component, pageProps }) {
-  return (
-  <>
-  <ContextAuthProvider>
-    <Component {...pageProps} />
-  </ContextAuthProvider>
-</>)
+  return <Component {...pageProps} />;
 }
 
-export default MyApp
+export default MyApp;

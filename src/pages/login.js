@@ -1,10 +1,10 @@
 import Image from "next/image";
 import Link from "next/link";
+import Alert from "../components/alerts/alert";
 import { useState } from "react";
 import { signInWithEmailAndPassword } from "firebase/auth";
-import { auth } from "../../firebase";
-import Alert from "../components/alerts/alert";
 import { useRouter } from "next/router";
+import { auth } from "../../firebase";
 
 
 const Login = () => {
@@ -31,7 +31,7 @@ const Login = () => {
     try {
       await signInWithEmailAndPassword(auth, email, password);
       setshowNotification(false)   
-      push("/");    
+      push("/layout");    
 
     } catch ({message}) {
         if (message === "Firebase: Error (auth/wrong-password).") {

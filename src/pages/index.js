@@ -1,17 +1,11 @@
-import Layout from './Layout';
-
-
+import Layout from "./layout";
 
 const Home = () => {
-
-
-
   return (
-    <div >
-<Layout />
-      
+    <div>
+      INDEX
     </div>
-  )
-}
+  );
+};
 
-export default Home
+export default Home;
