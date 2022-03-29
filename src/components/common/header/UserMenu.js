@@ -5,11 +5,15 @@ import { signOut } from "firebase/auth";
 import { auth } from "../../../../firebase";
 import { useRouter } from "next/router";
 import UserAvatar from '../../../../public/assets/user-avatar-32.png';
+import useContext from "../../../hooks/useAuth";
 
 
 const UserMenu = () => {
 
+  const { user } = useContext();  
   const { push } = useRouter();
+
+
 
   const signOutFirebase =  async () => {
  
@@ -18,11 +22,9 @@ const UserMenu = () => {
      push("/login");    
  
    } catch (error) {
-     console.log(error)
-     
+     console.log(error)     
    }
   }
-
 
 
   const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -66,7 +68,7 @@ const UserMenu = () => {
                 height={32}
               />
       <div className="flex items-center truncate">
-        <span className="truncate ml-2 text-sm font-medium group-hover:text-slate-800">Nombre usuario</span>
+        <span className="truncate ml-2 text-sm font-medium group-hover:text-slate-800">{user && user.email}</span>
         <svg className="w-3 h-3 shrink-0 ml-1 fill-current text-slate-400" viewBox="0 0 12 12">
           <path d="M5.9 11.4L.5 6l1.4-1.4 4 4 4-4L11.3 6z" />
         </svg>
