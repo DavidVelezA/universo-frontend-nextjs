@@ -31,7 +31,7 @@ const Login = () => {
     try {
       await signInWithEmailAndPassword(auth, email, password);
       setshowNotification(false)   
-      push("/layout");    
+    //  push("/layout");    
 
     } catch ({message}) {
         if (message === "Firebase: Error (auth/wrong-password).") {
