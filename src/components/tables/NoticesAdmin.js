@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
-import { getAll, getById } from "../../services/notice.service";
+import { getAll, getById, deleteNotice } from "../../services/notice.service";
+import { swalAlertConfirm } from "../alerts/swal_alert";
 import RegisterNotice from "../forms/registerNotice";
+import Link from "next/link";
 
 const NoticesAdmin = () => {
   const [page, setPage] = useState(1);
@@ -8,14 +10,9 @@ const NoticesAdmin = () => {
   const [totalDocs, setTotalDocs] = useState();
   const [notices, setNotices] = useState([]);
   const [formActive, setFormActive] = useState(false);
-  const [dataById, setDataById] = useState({
-    title: "",
-    section: "",
-    summary: "",
-    description: "",
-    tag: "",
-    autor: "",
-  });
+  const [dataById, setDataById] = useState(false);
+  const [refresh, setRefresh] = useState(false);
+
   useEffect(() => {
     const getData = async () => {
       const resp = await getAll(page);
@@ -26,7 +23,7 @@ const NoticesAdmin = () => {
       }
     };
     getData();
-  }, [page]);
+  }, [page, refresh]);
 
   const nextPage = () => {
     if (page < totalPages) {
@@ -40,19 +37,26 @@ const NoticesAdmin = () => {
     }
   };
 
-
   const getNoticeById = async (id) => {
-
-      try {
-          const response = await getById(id);
-          setDataById(response.data); 
-          setFormActive(true);
-        
+    try {
+      const response = await getById(id);
+      setDataById(response.data);
+      setFormActive(true);
     } catch (error) {
-        console.log(error)        
+      console.log(error);
     }
-  }
+  };
 
+  const deleteById = async (id) => {
+    try {
+      await swalAlertConfirm(
+        () => deleteNotice(id),
+        () => setRefresh(!refresh)
+      );
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <>
@@ -63,7 +67,7 @@ const NoticesAdmin = () => {
           className="bg-red-700 hover:bg-red-800 text-white font-bold py-2 px-4 rounded-full float-right mb-3"
           onClick={() => {
             setFormActive(false);
-            setDataById(null);
+            setDataById(false);
           }}
         >
           Close
@@ -80,7 +84,13 @@ const NoticesAdmin = () => {
       )}
 
       {formActive ? (
-        <RegisterNotice setFormActive={setFormActive} dataById={dataById} />
+        <RegisterNotice
+          setFormActive={setFormActive}
+          dataById={dataById}
+          setRefresh={setRefresh}
+          refresh={refresh}
+          setDataById={setDataById}
+        />
       ) : (
         <>
           <div className="relative overflow-x-auto shadow-md sm:rounded-lg clear-right">
@@ -117,16 +127,26 @@ const NoticesAdmin = () => {
                       <td className="px-6 py-4">{notice.tags}</td>
                       <td className="px-6 py-4">{notice.autor}</td>
                       <td className="px-6 py-4">
-                        <button className="bg-transparent hover:bg-yellow-200	text-neutral-600 font-semibold hover:text-dark py-2 px-4 border border-yellow-200 hover:border-transparent rounded"
-                        onClick={() => {getNoticeById(notice._id)}}>
+                        <button
+                          className="bg-transparent hover:bg-yellow-200	text-neutral-600 font-semibold hover:text-dark py-2 px-4 border border-yellow-200 hover:border-transparent rounded"
+                          onClick={() => {
+                            getNoticeById(notice._id);
+                          }}
+                        >
                           Edit
                         </button>
-                        <button className="ml-3 bg-transparent hover:bg-red-200	text-neutral-600 font-semibold hover:text-dark py-2 px-4 border border-red-200 hover:border-transparent rounded">
+                        <button
+                          className="ml-3 bg-transparent hover:bg-red-200	text-neutral-600 font-semibold hover:text-dark py-2 px-4 border border-red-200 hover:border-transparent rounded"
+                          onClick={() => deleteById(notice._id)}
+                        >
                           Delete
                         </button>
-                        <button className="ml-3 bg-transparent hover:bg-blue-200	text-neutral-600 font-semibold hover:text-dark py-2 px-4 border border-blue-200 hover:border-transparent rounded">
-                          View
-                        </button>
+                        <Link href={`/notices/detail_notice/${notice._id}`}>
+                          <a className="ml-3 bg-transparent hover:bg-blue-200 text-neutral-600 font-semibold hover:text-dark py-2 px-4 border border-blue-200 hover:border-transparent rounded">
+                            {" "}
+                            View{" "}
+                          </a>
+                        </Link>
                       </td>
                     </tr>
                   ))}

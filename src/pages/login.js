@@ -6,9 +6,7 @@ import { signInWithEmailAndPassword } from "firebase/auth";
 import { useRouter } from "next/router";
 import { auth } from "../../firebase";
 
-
 const Login = () => {
-
   const { push } = useRouter();
 
   const [credentials, setCredentials] = useState({
@@ -16,8 +14,8 @@ const Login = () => {
     password: "",
   });
 
-  const [showNotification, setshowNotification] = useState(false)
-  const [message, setMessage] = useState("")
+  const [showNotification, setshowNotification] = useState(false);
+  const [message, setMessage] = useState("");
 
   // obtener datos de inputs
   const changeUser = (e) => {
@@ -30,21 +28,18 @@ const Login = () => {
     const { email, password } = credentials;
     try {
       await signInWithEmailAndPassword(auth, email, password);
-      setshowNotification(false)   
-     push("/layout");    
-
-    } catch ({message}) {
-        if (message === "Firebase: Error (auth/wrong-password).") {
-            setMessage("Password Incorrect")    
-            setshowNotification(true)       
-        }
+      setshowNotification(false);
+      push("/notices/administer");
+    } catch ({ message }) {
+      if (message === "Firebase: Error (auth/wrong-password).") {
+        setMessage("Password Incorrect");
+        setshowNotification(true);
+      }
     }
   };
 
-
-
   return (
-      <div className="fondo relative min-h-screen flex items-center justify-center  py-12 px-4 sm:px-6 lg:px-8 bg-no-repeat bg-cover relative items-center">
+    <div className="fondo relative min-h-screen flex items-center justify-center  py-12 px-4 sm:px-6 lg:px-8 bg-no-repeat bg-cover relative items-center">
       <div className="max-w-md w-full space-y-8 p-10 bg-white rounded-xl z-10">
         <div className="text-right text-cyan-400">
           <Link href="/login">
@@ -54,7 +49,7 @@ const Login = () => {
             <a> Registration </a>
           </Link>
         </div>
-          { showNotification && <Alert message={message} />}
+        {showNotification && <Alert message={message} />}
 
         <form className="mt-8 space-y-6" action="#" method="POST">
           <div className="relative">
@@ -73,7 +68,6 @@ const Login = () => {
               type="password"
               placeholder="Password"
               onChange={changeUser}
-
             />
           </div>
           <div>
@@ -81,8 +75,8 @@ const Login = () => {
               type="submit"
               className="w-full flex justify-center bg-sky-600 text-gray-100 p-4  rounded-full tracking-wide
                                 font-semibold  focus:outline-none focus:shadow-outline hover:bg-sky-800 shadow-lg cursor-pointer transition ease-in duration-300"
-              onClick={loginUser}  
-                >
+              onClick={loginUser}
+            >
               Login
             </button>
           </div>

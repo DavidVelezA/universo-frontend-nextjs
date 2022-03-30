@@ -1,7 +1,19 @@
-import { useState } from "react";
-import { save } from "../../services/notice.service";
+import { useState, useEffect } from "react";
+import { save, update } from "../../services/notice.service";
 import { swalAlert } from "../alerts/swal_alert";
-const RegisterNotice = ({setFormActive, dataById}) => {
+const RegisterNotice = ({
+  setFormActive,
+  dataById,
+  setRefresh,
+  refresh,
+  setDataById,
+}) => {
+  useEffect(() => {
+    if (dataById && dataById.notice) {
+      setDataForm(dataById.notice);
+    }
+  }, []);
+
   const [dataForm, setDataForm] = useState({
     title: "",
     section: "",
@@ -22,20 +34,51 @@ const RegisterNotice = ({setFormActive, dataById}) => {
       const response = await save(dataForm);
 
       if (response && response.data.status == "info") {
-
-        swalAlert(response.data.status, 'Campos vacios', response.data.message);
-          
+        swalAlert(
+          response.data.status,
+          "Campos vacios",
+          response.data.message,
+          () => setRefresh(!refresh)
+        );
       } else {
-        swalAlert(response.data.status, 'Correcto', response.data.message);
+        swalAlert(response.data.status, "Correcto", response.data.message, () =>
+          setRefresh(!refresh)
+        );
         setFormActive(false);
       }
+      setDataById(false);
     } catch (error) {
       console.log(error);
     }
   };
 
+  //actualizar
 
+  const updateNotice = async (e) => {
+    e.preventDefault();
+    setDataForm(dataById.notice);
+    try {
+      const response = await update(dataById.notice._id, dataForm);
 
+      if (response && response.data.status == "info") {
+        swalAlert(
+          response.data.status,
+          "Campos vacios",
+          response.data.message,
+          () => setRefresh(!refresh)
+        );
+        s;
+      } else {
+        swalAlert(response.data.status, "Correcto", response.data.message, () =>
+          setRefresh(!refresh)
+        );
+        setFormActive(false);
+      }
+      setDataById(false);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <div className="relative  flex items-center justify-center  py-12 px-4 sm:px-6 lg:px-8 bg-no-repeat bg-cover relative items-center">
@@ -52,7 +95,7 @@ const RegisterNotice = ({setFormActive, dataById}) => {
                 type="text"
                 placeholder="Title"
                 onChange={changeNotice}
-                defaultValue={dataById && dataById.notice.title}
+                defaultValue={dataById ? dataById.notice.title : ""}
               />
             </div>
             <div className="w-full md:w-1/2 px-3">
@@ -65,8 +108,7 @@ const RegisterNotice = ({setFormActive, dataById}) => {
                 type="text"
                 placeholder="Section"
                 onChange={changeNotice}
-                defaultValue={dataById && dataById.notice.section}
-
+                defaultValue={dataById ? dataById.notice.section : ""}
               />
             </div>
           </div>
@@ -83,8 +125,7 @@ const RegisterNotice = ({setFormActive, dataById}) => {
               placeholder="Summary"
               rows={3}
               onChange={changeNotice}
-              defaultValue={dataById && dataById.notice.summary}
-
+              defaultValue={dataById ? dataById.notice.summary : ""}
             ></textarea>
           </div>
           <div className="">
@@ -98,8 +139,7 @@ const RegisterNotice = ({setFormActive, dataById}) => {
               placeholder="Description"
               rows={5}
               onChange={changeNotice}
-              defaultValue={dataById && dataById.notice.description}
-
+              defaultValue={dataById ? dataById.notice.description : ""}
             ></textarea>
           </div>
           <div className="flex flex-wrap -mx-3 mb-6">
@@ -113,8 +153,7 @@ const RegisterNotice = ({setFormActive, dataById}) => {
                 type="text"
                 placeholder="tag1, tag2, tag3"
                 onChange={changeNotice}
-                defaultValue={dataById && dataById.notice.tags}
-
+                defaultValue={dataById ? dataById.notice.tags : ""}
               />
             </div>
             <div className="w-full md:w-1/2 px-3">
@@ -127,8 +166,7 @@ const RegisterNotice = ({setFormActive, dataById}) => {
                 type="text"
                 placeholder="Autor"
                 onChange={changeNotice}
-                defaultValue={dataById && dataById.notice.autor}
-
+                defaultValue={dataById ? dataById.notice.autor : ""}
               />
             </div>
           </div>
@@ -136,9 +174,10 @@ const RegisterNotice = ({setFormActive, dataById}) => {
             <button
               className="bg-sky-500 hover:bg-sky-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline  "
               type="button"
-              onClick={registerNotice}
-            > {dataById ? 'Edit' : 'Create'}
-              
+              onClick={dataById ? updateNotice : registerNotice}
+            >
+              {" "}
+              {dataById ? "Edit" : "Create"}
             </button>
           </div>
           <div className="clear-right"></div>
