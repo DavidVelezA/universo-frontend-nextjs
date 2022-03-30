@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { save, update } from "../../services/notice.service";
 import { swalAlert } from "../alerts/swal_alert";
+
 const RegisterNotice = ({
   setFormActive,
   dataById,
@@ -8,7 +9,7 @@ const RegisterNotice = ({
   refresh,
   setDataById,
 }) => {
-  useEffect(() => {
+  useEffect((dataById) => {
     if (dataById && dataById.notice) {
       setDataForm(dataById.notice);
     }

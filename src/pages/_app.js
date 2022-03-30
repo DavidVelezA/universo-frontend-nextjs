@@ -7,10 +7,10 @@ import { AuthContext } from "../hooks/useAuth";
 
 function MyApp({ Component, pageProps }) {
 
-  const { push } = useRouter();
-
+  
   const [user, setUser] = useState(null)
-
+  const { push } = useRouter();
+  
   useEffect(() => {
     onAuthStateChanged(auth, (user) => {
       if (user) {      
