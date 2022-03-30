@@ -1,11 +1,17 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
-import { createUserWithEmailAndPassword } from "firebase/auth";
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../../firebase";
 import Alert from "../components/alerts/alert";
+import Swal from "sweetalert2";
+import { useRouter } from "next/router";
 
 const Register = () => {
+
+  const { push } = useRouter();
+
+
   const [credentials, setCredentials] = useState({
     email: "",
     password: "",
@@ -27,6 +33,17 @@ const Register = () => {
     try {
       await createUserWithEmailAndPassword(auth, email, password);
       setshowNotification(false);
+
+      Swal.fire({
+        icon: 'success',
+        title: 'Correcto',
+        text: 'Usuario creado',
+        showConfirmButton: false,
+        timer: 1000,
+      });      
+
+      push("/login");
+
 
     } catch ({ message }) {
       if (message === "Firebase: Password should be at least 6 characters (auth/weak-password).") {
