@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { getAll, getById, deleteNotice } from "../../services/notice.service";
 import { swalAlertConfirm } from "../alerts/swal_alert";
-import RegisterNotice from "../forms/registerNotice";
+import RegisterNotice from "../forms/RegisterNotice";
 import Link from "next/link";
 
 const NoticesAdmin = () => {
