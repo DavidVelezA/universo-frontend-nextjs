@@ -24,11 +24,11 @@ export const swalAlertConfirm = (action, refresh) => {
   }).then(async (result) => {
     if (result.isConfirmed) {
       const response = await action();
-      await refresh();
       swalAlert(
         response.data.status,
         response.data.status,
-        response.data.message
+        response.data.message,
+        refresh
       );
     }
   });

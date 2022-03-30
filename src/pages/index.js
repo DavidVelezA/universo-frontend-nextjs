@@ -1,7 +1,10 @@
-import Layout from "./layout";
+import Administer from "./notices/administer";
 
 const Home = () => {
-  return <Layout />;
+
+
+  return <Administer/>  
+      
 };
 
 export default Home;
