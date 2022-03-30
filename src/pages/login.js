@@ -31,8 +31,15 @@ const Login = () => {
       setshowNotification(false);
       push("/notices/administer");
     } catch ({ message }) {
+
+      console.log(message)
+
       if (message === "Firebase: Error (auth/wrong-password).") {
         setMessage("Password Incorrect");
+        setshowNotification(true);
+      }
+      if (message == "Firebase: Error (auth/user-not-found).") {
+        setMessage("Auth/user-not-found");
         setshowNotification(true);
       }
     }

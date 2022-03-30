@@ -3,12 +3,17 @@ import Link from "next/link";
 import { useState } from "react";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../../firebase";
+import Alert from "../components/alerts/alert";
 
 const Register = () => {
   const [credentials, setCredentials] = useState({
     email: "",
     password: "",
   });
+
+  const [showNotification, setshowNotification] = useState(false);
+  const [message, setMessage] = useState("");
+
 
   // obtener datos de inputs
   const changeUser = (e) => {
@@ -21,8 +26,16 @@ const Register = () => {
     const { email, password } = credentials;
     try {
       await createUserWithEmailAndPassword(auth, email, password);
-    } catch (error) {
-      console.log(error);
+      setshowNotification(false);
+
+    } catch ({ message }) {
+      if (message === "Firebase: Password should be at least 6 characters (auth/weak-password).") {
+        setMessage("Password should be at least 6 characters");
+        setshowNotification(true);
+      } if (message === "Firebase: Error (auth/email-already-in-use).") {
+        setMessage("auth/email-already-in-use");
+        setshowNotification(true);
+      }
     }
   };
 
@@ -37,6 +50,8 @@ const Register = () => {
             <a> Registration </a>
           </Link>
         </div>
+        {showNotification && <Alert message={message} />}
+
 
         <form className="mt-8 space-y-6" action="#" method="POST">
           <div className="relative">
