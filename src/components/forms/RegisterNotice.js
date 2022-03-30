@@ -9,7 +9,7 @@ const RegisterNotice = ({
   refresh,
   setDataById,
 }) => {
-  useEffect((dataById) => {
+  useEffect(() => {
     if (dataById && dataById.notice) {
       setDataForm(dataById.notice);
     }
